@@ -30,17 +30,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if (in_array($col, ['name', 'الاسم'])) $key = 'name';
                     elseif (in_array($col, ['phone', 'رقم الموبايل', 'الموبايل'])) $key = 'phone';
                     elseif (in_array($col, ['address', 'العنوان'])) $key = 'address';
-                    elseif (in_array($col, ['age', 'السن'])) $key = 'age';
+                    elseif (in_array($col, ['hobby', 'الهواية'])) $key = 'hobby';
                     elseif (in_array($col, ['birth_date', 'تاريخ الميلاد'])) $key = 'birth_date';
                     elseif (in_array($col, ['lagna', 'اللجنة'])) $key = 'lagna';
                     if ($key) $map[$i] = $key;
                 }
 
                 $insertedCount = 0;
-                $stmt = $pdo->prepare('INSERT INTO mokhdomeen (name, phone, address, age, birth_date, lagna) VALUES (?,?,?,?,?,?)');
+                $stmt = $pdo->prepare('INSERT INTO mokhdomeen (name, phone, address, hobby, birth_date, lagna) VALUES (?,?,?,?,?,?)');
                 $pdo->beginTransaction();
                 while (($row = fgetcsv($handle)) !== false) {
-                    $data = ['name' => null, 'phone' => null, 'address' => null, 'age' => null, 'birth_date' => null, 'lagna' => null];
+                    $data = ['name' => null, 'phone' => null, 'address' => null, 'hobby' => null, 'birth_date' => null, 'lagna' => null];
                     foreach ($map as $i => $key) {
                         $data[$key] = isset($row[$i]) ? trim($row[$i]) : null;
                     }
@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $data['name'],
                         $data['phone'] ?: null,
                         $data['address'] ?: null,
-                        $data['age'] !== null && $data['age'] !== '' ? (int)$data['age'] : null,
+                        $data['hobby'] ?: null,
                         $birthDateVal,
                         $data['lagna'] ?: null,
                     ]);
@@ -97,8 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <?php endif; ?>
 
       <p style="color:var(--muted); font-size:.85rem;">
-        الأعمدة المطلوبة في أول صف بالملف: <code>name, phone, address, age, birth_date, lagna</code>
-        (أو بالعربي: الاسم، رقم الموبايل، العنوان، السن، تاريخ الميلاد، اللجنة)
+        الأعمدة المطلوبة في أول صف بالملف: <code>name, phone, address, hobby, birth_date, lagna</code>
+        (أو بالعربي: الاسم، رقم الموبايل، العنوان، الهواية، تاريخ الميلاد، اللجنة)
       </p>
 
       <form method="post" enctype="multipart/form-data">
