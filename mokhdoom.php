@@ -94,7 +94,7 @@ $today = date('Y-m-d');
     <div class="meta" style="color:var(--muted); font-size:.9rem; line-height:2;">
       <?php if ($mokhdoom['phone']): ?>📞 <?= h($mokhdoom['phone']) ?><br><?php endif; ?>
       <?php if ($mokhdoom['address']): ?>🏠 <?= h($mokhdoom['address']) ?><br><?php endif; ?>
-      <?php if ($mokhdoom['age']): ?>🎂 <?= h($mokhdoom['age']) ?> سنة<br><?php endif; ?>
+      <?php if ($mokhdoom['hobby']): ?>🎨 <?= h($mokhdoom['hobby']) ?><br><?php endif; ?>
       <?php if ($mokhdoom['lagna']): ?>👥 لجنة: <?= h($mokhdoom['lagna']) ?><br><?php endif; ?>
     </div>
 

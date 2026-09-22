@@ -98,7 +98,7 @@ $flash = get_flash();
           <div class="info">
             <div class="name"><?= h($m['name']) ?></div>
             <div class="meta">
-              <?php if ($m['age']): ?><span><?= h($m['age']) ?> سنة</span><?php endif; ?>
+              <?php if ($m['hobby']): ?><span><?= h($m['hobby']) ?></span><?php endif; ?>
               <?php if ($m['lagna']): ?><span><?= h($m['lagna']) ?></span><?php endif; ?>
               <?php if ($m['phone']): ?><span><?= h($m['phone']) ?></span><?php endif; ?>
             </div>

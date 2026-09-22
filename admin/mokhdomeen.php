@@ -82,13 +82,13 @@ $flash = get_flash();
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>الاسم</th><th>السن</th><th>اللجنة</th><th>الموبايل</th><th>الخادم</th><th>آخر افتقاد</th><th></th></tr>
+          <tr><th>الاسم</th><th>الهواية</th><th>اللجنة</th><th>الموبايل</th><th>الخادم</th><th>آخر افتقاد</th><th></th></tr>
         </thead>
         <tbody>
           <?php foreach ($mokhdomeen as $m): ?>
             <tr>
               <td><?= h($m['name']) ?></td>
-              <td><?= $m['age'] ? h($m['age']) : '-' ?></td>
+              <td><?= $m['hobby'] ? h($m['hobby']) : '-' ?></td>
               <td><?= h($m['lagna'] ?: '-') ?></td>
               <td><?= h($m['phone'] ?: '-') ?></td>
               <td><?= $m['khadem_name'] ? h($m['khadem_name']) : '<span class="badge neutral">بدون خادم</span>' ?></td>

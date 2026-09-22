@@ -9,7 +9,7 @@ $error = '';
 
 // جلب المخدوم الحالي لو تعديل
 $mokhdoom = [
-    'name' => '', 'phone' => '', 'address' => '', 'age' => '', 'birth_date' => '', 'lagna' => '', 'notes' => '', 'khadem_id' => null,
+    'name' => '', 'phone' => '', 'address' => '', 'hobby' => '', 'birth_date' => '', 'lagna' => '', 'notes' => '', 'khadem_id' => null,
 ];
 if ($isEdit) {
     $stmt = $pdo->prepare('SELECT * FROM mokhdomeen WHERE id = ?');
@@ -29,14 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name      = trim($_POST['name'] ?? '');
     $phone     = trim($_POST['phone'] ?? '');
     $address   = trim($_POST['address'] ?? '');
-    $age       = $_POST['age'] !== '' ? (int)$_POST['age'] : null;
+    $hobby     = trim($_POST['hobby'] ?? '');
     $birthDate = trim($_POST['birth_date'] ?? '');
     $lagna     = trim($_POST['lagna'] ?? '');
     $notes     = trim($_POST['notes'] ?? '');
     $khadem_id = $_POST['khadem_id'] !== '' ? (int)$_POST['khadem_id'] : null;
 
     // نحتفظ بالقيم المُدخلة لو حصل خطأ عشان الفورم متتصفرش
-    $mokhdoom = compact('name', 'phone', 'address', 'age', 'birth_date', 'lagna', 'notes', 'khadem_id');
+    $mokhdoom = compact('name', 'phone', 'address', 'hobby', 'birth_date', 'lagna', 'notes', 'khadem_id');
 
     if ($name === '') {
         $error = 'اسم المخدوم مطلوب';
@@ -46,15 +46,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $birthDateVal = $birthDate !== '' ? date('Y-m-d', strtotime($birthDate)) : null;
         if ($isEdit) {
             $stmt = $pdo->prepare(
-                'UPDATE mokhdomeen SET name=?, phone=?, address=?, age=?, birth_date=?, lagna=?, notes=?, khadem_id=? WHERE id=?'
+                'UPDATE mokhdomeen SET name=?, phone=?, address=?, hobby=?, birth_date=?, lagna=?, notes=?, khadem_id=? WHERE id=?'
             );
-            $stmt->execute([$name, $phone ?: null, $address ?: null, $age, $birthDateVal, $lagna ?: null, $notes ?: null, $khadem_id, $id]);
+            $stmt->execute([$name, $phone ?: null, $address ?: null, $hobby ?: null, $birthDateVal, $lagna ?: null, $notes ?: null, $khadem_id, $id]);
             set_flash('success', 'تم حفظ التعديلات بنجاح');
         } else {
             $stmt = $pdo->prepare(
-                'INSERT INTO mokhdomeen (name, phone, address, age, birth_date, lagna, notes, khadem_id) VALUES (?,?,?,?,?,?,?,?)'
+                'INSERT INTO mokhdomeen (name, phone, address, hobby, birth_date, lagna, notes, khadem_id) VALUES (?,?,?,?,?,?,?,?)'
             );
-            $stmt->execute([$name, $phone ?: null, $address ?: null, $age, $birthDateVal, $lagna ?: null, $notes ?: null, $khadem_id]);
+            $stmt->execute([$name, $phone ?: null, $address ?: null, $hobby ?: null, $birthDateVal, $lagna ?: null, $notes ?: null, $khadem_id]);
             set_flash('success', 'تم إضافة المخدوم بنجاح');
         }
         redirect('mokhdomeen.php');
@@ -103,8 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="address" value="<?= h($mokhdoom['address']) ?>">
       </div>
       <div class="field">
-        <label>السن</label>
-        <input type="number" name="age" min="0" value="<?= h($mokhdoom['age']) ?>">
+        <label>الهواية</label>
+        <input type="text" name="hobby" value="<?= h($mokhdoom['hobby']) ?>">
       </div>
       <div class="field">
         <label>تاريخ الميلاد</label>
