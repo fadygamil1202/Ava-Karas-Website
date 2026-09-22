@@ -7,7 +7,7 @@
 // ---------- بيانات قاعدة البيانات ----------
 define('DB_HOST', 'localhost');                  // غالبًا localhost في Hostinger
 define('DB_NAME', 'AvaKarasTeam');           // اسم القاعدة اللي عملتها
-define('DB_USER', 'root');            // يوزر القاعدة
+define('DB_USER', 'roosst');            // يوزر القاعدة
 define('DB_PASS', '');              // باسورد القاعدة
 
 // ---------- إعدادات عامة ----------
