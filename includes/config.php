@@ -6,9 +6,9 @@
 
 // ---------- بيانات قاعدة البيانات ----------
 define('DB_HOST', 'localhost');                  // غالبًا localhost في Hostinger
-define('DB_NAME', 'u947727970_Users');           // اسم القاعدة اللي عملتها
-define('DB_USER', 'u947727970_AvaKarasUsers');            // يوزر القاعدة
-define('DB_PASS', 'Mindfuck2@');              // باسورد القاعدة
+define('DB_NAME', 'AvaKarasTeam');           // اسم القاعدة اللي عملتها
+define('DB_USER', 'root');            // يوزر القاعدة
+define('DB_PASS', '');              // باسورد القاعدة
 
 // ---------- إعدادات عامة ----------
 date_default_timezone_set('Africa/Cairo');
