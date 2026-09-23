@@ -151,6 +151,68 @@ function get_needs_visitation_ids(PDO $pdo): array {
     return $needsVisit;
 }
 
+// بيحسب نسبة كل حالة حضور (حاضر / غايب / معتذر) من إجمالي العدد
+function calc_attendance_percentages(array $counts): array {
+    $total = array_sum($counts);
+    $pct = [];
+    foreach (['حاضر', 'غايب', 'معتذر'] as $status) {
+        $pct[$status] = $total > 0 ? (int)round(($counts[$status] ?? 0) / $total * 100) : 0;
+    }
+    return $pct;
+}
+
+// نسبة حضور مخدومي الخادم في آخر اجتماع اتسجل حضوره (مش شرط يكون الخادم نفسه سجله)
+function get_khadem_last_meeting_attendance(PDO $pdo, int $khademId): ?array {
+    $meeting = $pdo->query("SELECT id, meeting_date FROM meetings ORDER BY meeting_date DESC LIMIT 1")->fetch();
+    if (!$meeting) return null;
+
+    $stmt = $pdo->prepare("
+        SELECT a.status, COUNT(*) c
+        FROM attendance a
+        JOIN mokhdomeen m ON m.id = a.person_id AND a.person_type = 'mokhdoom'
+        WHERE a.meeting_id = ? AND m.khadem_id = ?
+        GROUP BY a.status
+    ");
+    $stmt->execute([$meeting['id'], $khademId]);
+    $counts = ['حاضر' => 0, 'غايب' => 0, 'معتذر' => 0];
+    foreach ($stmt->fetchAll() as $row) {
+        $counts[$row['status']] = (int)$row['c'];
+    }
+    $total = array_sum($counts);
+    if ($total === 0) return null; // مفيش حضور اتسجل لمخدومي الخادم ده في آخر اجتماع
+
+    return [
+        'meeting_date' => $meeting['meeting_date'],
+        'total' => $total,
+        'counts' => $counts,
+        'percentages' => calc_attendance_percentages($counts),
+    ];
+}
+
+// نسبة حضور مخدومي الخادم خلال آخر $days يوم (شهر بالتقريب)
+function get_khadem_last_month_attendance(PDO $pdo, int $khademId, int $days = 30): array {
+    $since = date('Y-m-d', strtotime("-$days days"));
+    $stmt = $pdo->prepare("
+        SELECT a.status, COUNT(*) c
+        FROM attendance a
+        JOIN meetings me ON me.id = a.meeting_id
+        JOIN mokhdomeen m ON m.id = a.person_id AND a.person_type = 'mokhdoom'
+        WHERE m.khadem_id = ? AND me.meeting_date >= ?
+        GROUP BY a.status
+    ");
+    $stmt->execute([$khademId, $since]);
+    $counts = ['حاضر' => 0, 'غايب' => 0, 'معتذر' => 0];
+    foreach ($stmt->fetchAll() as $row) {
+        $counts[$row['status']] = (int)$row['c'];
+    }
+
+    return [
+        'total' => array_sum($counts),
+        'counts' => $counts,
+        'percentages' => calc_attendance_percentages($counts),
+    ];
+}
+
 // إجمالي الطلبات المعلّقة (تسجيل خدام جدد + استعادة كلمة مرور) - بتظهر كرقم على تاب "طلبات التسجيل"
 function pending_actions_count($pdo) {
     $reg = $pdo->query("SELECT COUNT(*) c FROM users WHERE status = 'pending'")->fetch()['c'];

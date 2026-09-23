@@ -45,6 +45,9 @@ $needsVisitationCount = count(array_intersect_key($needsVisitationIds, array_fli
 
 $upcomingBirthdaysCount = count(get_upcoming_birthdays($pdo, $user['id'], 7));
 
+$lastMeetingAttendance = get_khadem_last_meeting_attendance($pdo, $user['id']);
+$lastMonthAttendance = get_khadem_last_month_attendance($pdo, $user['id']);
+
 $flash = get_flash();
 ?>
 <!DOCTYPE html>
@@ -81,6 +84,32 @@ $flash = get_flash();
     <div class="stat-card"><div class="num"><?= $never ?></div><div class="lbl">لم يُفتقدوا أبدًا</div></div>
     <div class="stat-card"><div class="num"><?= $over30 ?></div><div class="lbl">تأخر افتقادهم +30 يوم</div></div>
     <div class="stat-card"><div class="num"><?= $needsVisitationCount ?></div><div class="lbl">محتاج افتقاد (غياب متكرر)</div></div>
+  </div>
+
+  <div class="section-title">نسبة حضور مخدوميك</div>
+  <div class="cards-row">
+    <div class="card-box">
+      <div style="font-weight:600; margin-bottom:10px;">
+        آخر اجتماع<?= $lastMeetingAttendance ? ' (' . fmt_date($lastMeetingAttendance['meeting_date']) . ')' : '' ?>
+      </div>
+      <?php if ($lastMeetingAttendance): ?>
+        <span class="badge ok">حاضر <?= $lastMeetingAttendance['percentages']['حاضر'] ?>%</span>
+        <span class="badge danger">غايب <?= $lastMeetingAttendance['percentages']['غايب'] ?>%</span>
+        <span class="badge warn">معتذر <?= $lastMeetingAttendance['percentages']['معتذر'] ?>%</span>
+      <?php else: ?>
+        <span class="badge neutral">لسه مفيش حضور متسجل</span>
+      <?php endif; ?>
+    </div>
+    <div class="card-box">
+      <div style="font-weight:600; margin-bottom:10px;">آخر شهر</div>
+      <?php if ($lastMonthAttendance['total'] > 0): ?>
+        <span class="badge ok">حاضر <?= $lastMonthAttendance['percentages']['حاضر'] ?>%</span>
+        <span class="badge danger">غايب <?= $lastMonthAttendance['percentages']['غايب'] ?>%</span>
+        <span class="badge warn">معتذر <?= $lastMonthAttendance['percentages']['معتذر'] ?>%</span>
+      <?php else: ?>
+        <span class="badge neutral">لسه مفيش حضور متسجل</span>
+      <?php endif; ?>
+    </div>
   </div>
 
   <form method="get" class="toolbar">
