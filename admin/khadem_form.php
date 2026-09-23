@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($birthDate !== '' && !strtotime($birthDate)) {
         $error = 'تاريخ الميلاد غير صحيح';
     } else {
-        // تأكد إن اسم المستخدم أو رقم الموبايل مش مكررين
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ? AND id != ?');
+        // تأكد إن اسم المستخدم أو رقم الموبايل مش مكررين (بغض النظر عن حالة الأحرف)
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(username) = LOWER(?) AND id != ?');
         $stmt->execute([$username, $id]);
         $phoneStmt = $pdo->prepare('SELECT id FROM users WHERE phone = ? AND id != ?');
         $phoneStmt->execute([$phone, $id]);

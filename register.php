@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $confirm) {
         $error = 'كلمة المرور وتأكيدها مش متطابقين';
     } else {
-        // تأكد إن اسم المستخدم أو رقم الموبايل مش مستخدمين في حساب موجود بالفعل
-        $stmt = $pdo->prepare('SELECT id FROM users WHERE username = ?');
+        // تأكد إن اسم المستخدم أو رقم الموبايل مش مستخدمين في حساب موجود بالفعل (بغض النظر عن حالة الأحرف)
+        $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(username) = LOWER(?)');
         $stmt->execute([$username]);
         $phoneStmt = $pdo->prepare('SELECT id FROM users WHERE phone = ?');
         $phoneStmt->execute([$phone]);
