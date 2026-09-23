@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($identifier === '' || $password === '') {
         $error = 'من فضلك ادخل اسم المستخدم أو رقم الموبايل وكلمة المرور';
     } else {
-        // يدخل باسم المستخدم أو رقم الموبايل، أيًا منهما
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE username = ? OR phone = ?');
+        // يدخل باسم المستخدم أو رقم الموبايل، أيًا منهما (اسم المستخدم مش حساس لحالة الأحرف)
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE LOWER(username) = LOWER(?) OR phone = ?');
         $stmt->execute([$identifier, $identifier]);
         $user = $stmt->fetch();
 
