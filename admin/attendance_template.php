@@ -57,6 +57,12 @@ if (!empty($unassigned)) {
     }
 }
 
+// نتأكد مفيش أي مخرجات متراكمة (مسافات أو تحذيرات PHP) قبل ما نبعت الملف
+// عشان أي حرف زيادة قبل بيانات الـ xlsx بيبوظ الملف بالكامل في إكسل
+while (ob_get_level() > 0) {
+    ob_end_clean();
+}
+
 $filename = 'قالب_حضور_' . date('Y-m-d') . '.xlsx';
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
