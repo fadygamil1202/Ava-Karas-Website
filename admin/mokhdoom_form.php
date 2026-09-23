@@ -25,6 +25,13 @@ if ($isEdit) {
 // قائمة الخدام لاختيار من عليهم
 $khadam = $pdo->query("SELECT id, name FROM users WHERE role = 'khadem' AND status = 'approved' AND active = 1 ORDER BY name")->fetchAll();
 
+// قائمة الهوايات المتاحة للاختيار
+$hobbies = [
+    'العزف', 'تمثيل', 'رسم', 'تصوير', 'مونتاج', 'تقديم والقاء',
+    'كتابة وتأليف', 'معلومات عامة واسئلة', 'حكي وقصص', 'تقليد شخصيات',
+    'حل الغاز والعاب ذكاء', 'تصميم جرافيك', 'رياضة',
+];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name      = trim($_POST['name'] ?? '');
     $phone     = trim($_POST['phone'] ?? '');
@@ -104,7 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <div class="field">
         <label>الهواية</label>
-        <input type="text" name="hobby" value="<?= h($mokhdoom['hobby']) ?>">
+        <select name="hobby">
+          <option value="">بدون هواية</option>
+          <?php foreach ($hobbies as $hobby): ?>
+            <option value="<?= h($hobby) ?>" <?= $mokhdoom['hobby'] === $hobby ? 'selected' : '' ?>><?= h($hobby) ?></option>
+          <?php endforeach; ?>
+        </select>
       </div>
       <div class="field">
         <label>تاريخ الميلاد</label>
